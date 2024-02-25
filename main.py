@@ -5,6 +5,7 @@ import numpy as np
 from graph import Graph
 
 # import other functions
+from graph import generate_graph
 
 """
 Circuit responsible for the calculating the TSP
@@ -38,13 +39,6 @@ def evaluate_wires(graph: Graph):
   measured_wires = list(range(9)) # TODO - placeholder
   aux_wires = all_wires - 1 # in general, aux wire is usually the last wire
   return cycle_wires, measured_wires, aux_wires, all_wires
-
-"""
-Generates a random graph based on number of cities (vertices)
-"""
-def generate_graph(cities: int):
-  # TODO - finish the function, preferably to have about 20% of the adj_matrix to be 0
-  return [[],[]]
 
 if __name__ == "__main__":
   NUM_CITIES = 5

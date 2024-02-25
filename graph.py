@@ -1,3 +1,6 @@
+"""
+Placeholder class to represent a graph
+"""
 class Graph:
   def __init__(self, nodes: int, adj_matrix=None):
     self.nodes = nodes
@@ -17,3 +20,10 @@ class Graph:
 
   def add_edge(self, src: int, dst: int, cost: int):
     self.adj_matrix[src][dst] = cost
+
+"""
+Generates a random graph based on number of cities (vertices)
+"""
+def generate_graph(cities: int) -> Graph:
+  # TODO - finish the function, preferably to have about 20% of the adj_matrix to be 0
+  return [[],[]]
