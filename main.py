@@ -25,20 +25,36 @@ def tsp_circuit(graph: Graph):
   # returns the probabilities of wires to be measured
   return qml.probs(measured_wires)
 
+
+def get_k_opt(cities: int):
+  temp = np.array([int(np.ceil(cities/(k+1))) + k for k in range(cities)])
+  return np.argmin(temp)
+
 """
 Calculate the specific wires for each use (like a list)
 Currently, return the encoded_wires, aux_wire, all_wires
 """
-def evaluate_wires(graph: Graph):
+def evaluate_wires(graph: Graph, max_choices: int):
   cities = graph.nodes
-  choice_bit_size = int(np.ceil(np.log2(cities)))
+  choice_bit_size = int(np.ceil(np.log2(max_choices)))
 
   cycle_wires = range(cities * choice_bit_size)
 
+  # wires for QFT (CLC oracle)
+  qft_precision = 6
+  t_wires = range(cycle_wires[-1] + 1, cycle_wires[-1] + 1 + qft_precision)
+
+  # compute the HCD wires (anchor wires)
+  k_opt = get_k_opt(cities)
+  L = int(np.ceil(cities/(k_opt+1)))
+  intermediate_wires = choice_bit_size * (k_opt + L)
+
   all_wires = 10 # TODO - placeholder
-  measured_wires = list(range(9)) # TODO - placeholder
+  # measured_wires = list(range(9)) # TODO - placeholder
+  clc_aux = ...
+  hcd_aux = ...
   aux_wires = all_wires - 1 # in general, aux wire is usually the last wire
-  return cycle_wires, measured_wires, aux_wires, all_wires
+  return cycle_wires, aux_wires, all_wires
 
 if __name__ == "__main__":
   NUM_CITIES = 5
@@ -47,7 +63,7 @@ if __name__ == "__main__":
 
   # evaluate wires function
   # returns measured_wires, aux_wire, total_wires
-  cycle_wires, measured_wires, aux_wires, all_wires = evaluate_wires(graph)
+  cycle_wires, measured_wires, aux_wires, all_wires = evaluate_wires(graph, max_choices=4)
 
   # create a device based number of wires
   dev = qml.device("default.qubit", wires=all_wires)
