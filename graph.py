@@ -5,14 +5,15 @@ import matplotlib.pyplot as plt
 Placeholder class to represent a graph
 """
 class Graph:
-  def __init__(self, nodes: int, coords, adj_matrix=None, adj_list=None):
+  def __init__(self, nodes: int, coords, adj_list=None):
     self.nodes = nodes
     self.coords = np.array(coords)
-    if adj_matrix is None:
-      self.adj_matrix = [[0] * nodes for _ in range(nodes)]
-    else:
-      self.adj_matrix = adj_matrix
+    # if adj_matrix is None:
+    #   self.adj_matrix = [[0] * nodes for _ in range(nodes)]
+    # else:
+    #   self.adj_matrix = adj_matrix
     self.adj_list = adj_list
+    self.costs = self._matrix_from_list()
 
   def _adj_list_from_matrix(self):
     self.adj_list = []
@@ -22,6 +23,13 @@ class Graph:
       for dst in range(self.nodes):
         r.append((dst, row[dst]))
       self.adj_list.append(r)
+
+  def _matrix_from_list(self):
+    adj_matrix = np.array([[1000] * self.nodes for _ in range(self.nodes)])
+    for src in self.nodes:
+      for dst in self.adj_list[src]:
+        adj_matrix[src,dst] = np.linalg.norm(self.coords[src] - self.coords[dst])
+    return adj_matrix
 
   def add_edge(self, src: int, dst: int, cost: int):
     self.adj_matrix[src][dst] = cost
