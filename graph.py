@@ -1,4 +1,3 @@
-import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -29,6 +28,14 @@ class Graph:
 
 """
 Generates a random graph based on number of cities (vertices)
+
+Args:
+- cities: nodes
+- choices: degree of a node
+- is_complete: check if generating a complete graph or sparse graph
+
+Returns:
+- Graph object that represents the graph generated
 """
 def generate_graph(cities: int, choices: int, is_complete: bool=False) -> Graph:
   if not is_complete: assert((cities % 2 == 0) or (choices % 2 == 0)), "Product of nodes and degrees must be even"
@@ -46,6 +53,12 @@ def generate_graph(cities: int, choices: int, is_complete: bool=False) -> Graph:
 
 """
 Generate a full complete graph for n cities
+
+Args:
+- cities: nodes
+
+Returns:
+- Adj_list: adjacency list of the complete graph
 """
 def _complete_graph(cities: int):
   adj_list = []
@@ -58,6 +71,13 @@ def _complete_graph(cities: int):
 
 """
 Generate sparse d-complete graph for n cities
+
+Args:
+- cities: number of cities (nodes)
+- d: number of connections per city (degrees)
+
+Returns:
+- adj_list: returns the adjacency list of the graph
 """
 def _sparse_graph(cities: int, d: int):
   dummy=True
@@ -65,11 +85,14 @@ def _sparse_graph(cities: int, d: int):
     dummy = False
     adj_list = [[] for _ in range(cities)]
     choices = [[y for y in range(cities) if x != y] for x in range(cities)]
+    # indices and endings represent the left and right hand side limits to remaining choices of cities
     indices = [0] * cities
     endings = [cities-2] * cities
     for src in range(cities):
+      # continuously adds new edges to src until it has degree d
       while (len(adj_list[src]) < d):
         # attempt to add a new edge
+        # if the difference is 0, there are no other cities to go to -> break and restart generation
         if indices[src] == endings[src]:
           dummy = True
           break
@@ -78,9 +101,12 @@ def _sparse_graph(cities: int, d: int):
         #   dummy = True
         #   break
         new_choice = np.random.choice(remaining_choices)
+
+        # checks that destination city has less than d degrees, else move it to the end of list (removed from selection)
         if (len(adj_list[new_choice]) >= d):
           _swap(choices[src], choices[src].index(new_choice), endings[src])
           endings[src] -= 1
+        # otherwise, adds an edge, and indicate in adj_list of src and destination
         else:
           _swap(choices[src], choices[src].index(new_choice), indices[src])
           _swap(choices[new_choice], choices[new_choice].index(src), indices[new_choice])
@@ -88,11 +114,17 @@ def _sparse_graph(cities: int, d: int):
           adj_list[new_choice].append(src)
           indices[src] += 1
           indices[new_choice] += 1
-      # print(adj_list)
       if dummy: break
 
   return adj_list
 
+"""
+Helper function - swaps 2 values in an array
+
+Args
+- arr: array
+- old: first index, new: second index
+"""
 def _swap(arr, old, new):
   temp = arr[old]
   arr[old] = arr[new]
@@ -100,11 +132,16 @@ def _swap(arr, old, new):
 
 """
 Displays the graph on a plot
+Args:
+- g: graph to be plotted
+Returns:
+- TODO - will return the figure instead of plotting on the screen
 """
 def plot_graph(g: Graph):
-  # for point in g.coords:
-  #   plt.plot(point[0], point[1])
+  # Draws the points
   plt.scatter(x=g.coords[:,0], y=g.coords[:,1])
+
+  # draws the edges between cities
   for src in range(g.nodes):
     for dst in g.adj_list[src]:
       plt.plot([g.coords[src,0], g.coords[dst,0]], [g.coords[src,1], g.coords[dst,1]])
