@@ -3,11 +3,16 @@ Recreating https://arxiv.org/abs/2212.02735 in Pennylane. We attempt to use Grov
 
 ## Contents
 1. [Background](#background)
-1. [Basic Structure](#basic-structure)
-2. [Oracle(s) implementation](#oracles-implementation)
-3. [Problem Encoding](#problem-encoding)
-4. [Cycle Length Comparing](#cycle-length-comparing)
-5. [Hamiltonian Cycle Detection](#hamiltonian-cycle-detection)
+2. [Basic Structure](#basic-structure)
+3. [Oracle(s) implementation](#oracles-implementation)
+4. [Problem Encoding](#problem-encoding)
+5. [Oracle Implementation](#oracles-implementation)
+    - [Cycle Length Comparing](#cycle-length-comparing)
+    - [Hamiltonian Cycle Detection](#hamiltonian-cycle-detection)
+6. [Testing](#testing)
+7. [Algorithm Analysis](#algorithm-analysis)
+8. [Current Tasks](#current-tasks)
+9. [Milestones](#milestones)
 
 ## Background
 The travelling salesman problem (TSP) determines a path in a graph that traverses through every node once, and returns to the starting point at the lowest cost/distance. This means that the algorithm is required to detect a Hamiltonian cycle in the graph, and to determine the cycle with the lowest total sum. As a result, TSP is an NP-hard problem, and the decision problem of TSP (for threshold $\leq k$) is NP-complete. TSP has many applications in (look for sectors), and it is desirable to reduce the runtime of the algorithm as much as possible.
@@ -16,7 +21,7 @@ Grover's Algorithm is an efficient database search algorithm developed in the 19
 
 As Grover's Algorithm only brings a quadratic speedup in runtime, the algorithm does not run in polynomial time. Nevertheless, any significant speedup is worth investigating.
 ## Basic Structure
-TODO
+![circuit structure](figures/main_circuit.png)
 ## Problem Encoding
 For an $N$-city TSP, there are at most $d\leq N-1$ choices for the salesman at each city. To encode the cities and the choices, we would require $Nm$ qubits, where $m = \lceil\log d\rceil$, which we refer as the Cycle Register $\ket{C}$.
 
@@ -28,7 +33,6 @@ The oracle is responsible for picking out a valid hamiltonian cycle that has the
 Here, 2 different oracles come into play. The cycle length comparing (CLC) oracle would be used to limit the length of the cycle to $C_{th}$, and hamiltonian cycle detector (HCD) oracle checks that the choices form a hamiltonian cycle. An AND gate
 is then applied to the result of both oracles.
 ### Cycle Length Comparing
-
 Note: Update threshold from sampled results. Question: how to ensure $C_{th}$ is lower than all other suboptimal solution (without knowing the solution)?
 - Turn TSP into a decision problem for a specific threshold, and then conduct binary search till a single optimal solution is found.
 
@@ -44,6 +48,9 @@ Then, a quantum comparator is implemented to compare the total cost of a path wi
 
 Lastly, the intermediate ancillary qubits are freed up for reuse by mirrored gates.
 
+#### Diagram
+![CLC Oracle Diagram](figures/clc_diagram.png)
+
 #### Preprocessing
 - Set max cycle length to $2\pi$ (iQFT compatibility)
 - Normalize adj matrix by sum of all entries (mult by $2\pi$)
@@ -54,7 +61,7 @@ $$U_j = \text{diag}(\text{exp}(i\theta_{j, 0}), ..., \text{exp}(i\theta_{j, 2^m-
 $$\theta_{j,k}= a_{j,P_j[k]}$$
 - Different path choices introduces different phase shifts (based on the cost)
 $$U_j\ket{C_j} = \text{exp}(i\theta_{j, C_j})\ket{C_j}$$
-
+- TODO
 #### Quantum Comparator
 The paper states that such a comparator is already implemented in Qiskit. (Goal: find out how the quantum comparator is implemented, and implement in Pennylane)
 #### Steps to Implement
@@ -63,6 +70,7 @@ The paper states that such a comparator is already implemented in Qiskit. (Goal:
 - TODO
 
 ### Hamiltonian Cycle Detection
+![HCD with anchor qubits](figures/hcd_diagram.png)
 TODO
 
 ## Testing
@@ -81,8 +89,8 @@ TODO
 - Figure out how the U-operator is implemented
 ### HCD Oracle
 - Learn how the F-index forwarder is implemented
+- Implement the OR-gates
 - Understand the anchor qubit strategy
-- Implement the circuit
 
 ## Milestones
 - Create the quantum encoding for the nodes and city choices
