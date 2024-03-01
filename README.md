@@ -94,6 +94,7 @@ TODO
 - Understand the anchor qubit strategy
 
 ## Milestones
+- Create graph generator :heavy_check_mark:
 - Create the quantum encoding for the nodes and city choices
 - Finish the HCD oracle, allowing the algo to check for Hamiltonian cycles
 - Understand QFT (and iQFT) to apply to CLC oracle
