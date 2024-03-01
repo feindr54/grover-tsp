@@ -44,12 +44,14 @@ def generate_graph(cities: int, choices: int) -> Graph:
 
 """
 Generate a random subset from a collection
+Args:
+ - s: starting index
 """
-def _subset(cities: list[int], d: int):
+def _subset(cities: list[int], d: int, s: int):
   assert(d <= len(cities))
 
   edges = []
-  for start in range(d):
+  for start in range(s, d):
     index = np.random.randint(start, len(cities))
     edges.append(cities[index])
     # swap cities with start
@@ -74,13 +76,15 @@ def _complete_graph(cities: int):
 Generate sparse d-complete graph for n cities
 """
 def _sparse_graph(cities: int, d: int):
-  adj_list = []
+  adj_list = [] * cities
   for i in range(cities):
     edges = []
     for j in range(cities):
-      if i != j: edges.append(j)
-    edges = _subset(edges, d)
-    adj_list.append(edges)
+      if i != j: adj_list[i].append(j)
+    edges = _subset(adj_list[i], d, i)
+    adj_list[i] = edges
+    for dst in edges:
+      adj_list[dst].append(i)
   return adj_list
 
 """
