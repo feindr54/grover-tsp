@@ -1,9 +1,9 @@
 # other folders
-figures/
+# figures/
 
 # large files, like images
-*.png
-*.jpg
+# *.png
+# *.jpg
 *.pdf
 
 # Byte-compiled / optimized / DLL files
