@@ -85,6 +85,7 @@ TODO
 
 ## Current Tasks
 ### CLC Oracle
+- Implement iQFT in Pennylane
 - Figure out how the quantum comparator is implemented in qiskit, and port to pennylane
 - Figure out how the U-operator is implemented
 ### HCD Oracle
