@@ -26,7 +26,7 @@ class Graph:
 
   def _matrix_from_list(self):
     adj_matrix = np.array([[1000] * self.nodes for _ in range(self.nodes)])
-    for src in self.nodes:
+    for src in range(self.nodes):
       for dst in self.adj_list[src]:
         adj_matrix[src,dst] = np.linalg.norm(self.coords[src] - self.coords[dst])
     return adj_matrix
@@ -45,14 +45,16 @@ Args:
 Returns:
 - Graph object that represents the graph generated
 """
-def generate_graph(cities: int, choices: int, is_complete: bool=False) -> Graph:
-  if not is_complete: assert((cities % 2 == 0) or (choices % 2 == 0)), "Product of nodes and degrees must be even"
-  # TODO - finish the function, preferably to have about 20% of the adj_matrix to be 0
+def generate_graph(cities: int, choices: int) -> Graph:
+  # Check that cities and choices are valid
+  assert(choices < cities), "Invalid graph: choices per cities must be less than the total number of cities"
+  assert((cities % 2 == 0) or (choices % 2 == 0)), "Invalid graph: product of nodes and degrees must be even"
+
   # generate N random points in [0,1]^2 space
   points = np.random.rand(cities, 2)
 
   # generate edges between random nodes
-  if is_complete or (choices == cities-1):
+  if (choices == cities-1):
     adj_list = _complete_graph(cities)
   else:
     adj_list = _sparse_graph(cities, d=choices)
@@ -156,6 +158,6 @@ def plot_graph(g: Graph):
   plt.show()
 
 if __name__ == "__main__":
-  g: Graph = generate_graph(8, 3)
+  g: Graph = generate_graph(6, 4)
   print(g.adj_list)
   plot_graph(g)

@@ -2,6 +2,7 @@
 Recreating https://arxiv.org/abs/2212.02735 in Pennylane. We attempt to use Grover's Adaptive Search (GAS) to get a quicker solution to the Travelling Salesman Problem (TSP).
 
 ## Contents
+1. [Installation](#installation)
 1. [Background](#background)
 2. [Basic Structure](#basic-structure)
 3. [Oracle(s) implementation](#oracles-implementation)
@@ -13,6 +14,13 @@ Recreating https://arxiv.org/abs/2212.02735 in Pennylane. We attempt to use Grov
 7. [Algorithm Analysis](#algorithm-analysis)
 8. [Current Tasks](#current-tasks)
 9. [Milestones](#milestones)
+
+## Installation
+Create a virtual environment in Python 3.11 and install the required packages <!-- Double check if lower versions of python can work -->
+```
+python -m venv .venv
+pip install -r requirements.txt
+```
 
 ## Background
 The travelling salesman problem (TSP) determines a path in a graph that traverses through every node once, and returns to the starting point at the lowest cost/distance. This means that the algorithm is required to detect a Hamiltonian cycle in the graph, and to determine the cycle with the lowest total sum. As a result, TSP is an NP-hard problem, and the decision problem of TSP (for threshold $\leq k$) is NP-complete. TSP has many applications in (look for sectors), and it is desirable to reduce the runtime of the algorithm as much as possible.
